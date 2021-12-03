@@ -2,6 +2,6 @@ package cleversidc;
 
 import adts.*;
 
-public class CleverSIDC {
-    
+public abstract class CleverSIDC {
+
 }
