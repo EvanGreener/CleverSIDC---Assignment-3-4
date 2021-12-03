@@ -1,37 +1,10 @@
 package adts;
 
 import utils.SieveOfEratosthenes;
+import interfaces.*;
 
-class Entry {
-    int key;
-    String value;
-
-    public Entry(int key, String value) {
-        this.key = key;
-        this.value = value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public int getKey() {
-        return key;
-    }
-
-    public String getValue() {
-        return value;
-    }
-}
-
-interface IHashTable {
-    String get(int key);
-    String remove(int key);
-    void put(int key, String value);
-    int[] keysSorted();
-    int hash(int key);
-
-}
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class HashTable implements IHashTable {
     Entry[] internalArray;
@@ -127,7 +100,7 @@ public class HashTable implements IHashTable {
             return null;
         }
         else{
-            while (c != null){
+            do {
                 c = internalArray[index];
                 if (c.getKey() == key) {
                     value = c.getValue();
@@ -136,7 +109,7 @@ public class HashTable implements IHashTable {
                 else {
                     index = (index + 1) % N;
                 }
-            }
+            } while (c != null);
         }
 
         if (cellToBeEmptied != -1) {
@@ -150,15 +123,6 @@ public class HashTable implements IHashTable {
         }
     }
 
-    @Override
-    public int[] keysSorted() {
-        var keys = new int[9];
-        for (Entry e : internalArray) {
-
-        }
-        return keys;
-    }
-
     // Since the keys are already integers, a simple MAD compressions is used to hash the key
     @Override
     public int hash(int key) {
@@ -168,8 +132,33 @@ public class HashTable implements IHashTable {
         int b = prime -2;
 
         return (a*key + b) % prime;
+    }
 
+    private class KeyIterator implements Iterator{
+        private int i = 0;
 
+        @Override
+        public boolean hasNext() {
+            return i < size;
+        }
+
+        @Override
+        public Object next() {
+            if (i == size) throw new NoSuchElementException("No next element");
+            return internalArray[i++].getKey();
+        }
+    }
+
+    private class KeyIterable implements Iterable{
+        @Override
+        public Iterator iterator() {
+            return new KeyIterator();
+        }
+    }
+
+    @Override
+    public KeyIterable keySet() {
+        return new KeyIterable();
     }
 }
 
