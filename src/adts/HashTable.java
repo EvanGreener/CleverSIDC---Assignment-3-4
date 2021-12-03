@@ -152,7 +152,11 @@ public class HashTable implements IHashTable {
 
     @Override
     public int[] keysSorted() {
-        return new int[0];
+        var keys = new int[9];
+        for (Entry e : internalArray) {
+
+        }
+        return keys;
     }
 
     // Since the keys are already integers, a simple MAD compressions is used to hash the key
