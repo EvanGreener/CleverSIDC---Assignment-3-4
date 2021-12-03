@@ -5,5 +5,5 @@ public interface IHashTable {
     String remove(int key);
     void put(int key, String value);
     int hash(int key);
-    Iterable<Integer> keySet();
+    int[] keySet();
 }

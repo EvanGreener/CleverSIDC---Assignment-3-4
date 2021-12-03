@@ -3,6 +3,7 @@ package adts;
 import utils.SieveOfEratosthenes;
 import interfaces.*;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -10,7 +11,13 @@ public class HashTable implements IHashTable {
     Entry[] internalArray;
     int size;
     int prime; // Also equal to N, i.e. the capacity of the table
-    final float loadFactor = 0.33f;
+    final float loadFactor = 0.33f; // For open addressing data hash tables, 1/3rd is a good choice
+
+    public HashTable(int prime) {
+        this.internalArray = new Entry[prime];
+        this.size=0;
+        this.prime = prime;
+    }
 
     @Override
     public String get(int key) {
@@ -52,8 +59,10 @@ public class HashTable implements IHashTable {
             }
         } while (p != N);
 
+        size += 1;
+
         if ((float)size/prime >= loadFactor){
-            rehashAllKeys();
+            rehashAllKeys(); //Also increases capacity and adjusts hash function
         }
     }
 
@@ -85,9 +94,9 @@ public class HashTable implements IHashTable {
     }
 
     // This remove algorithm uses a strategy where the emptied cell gets replaced by the
-    // last adjacent cell that's not empty as opposed to using the special AVAILABLE
-    // object. The lazy deletion strategy which utilizes the AVAILABLE object adds to the
-    // load factor and can increase the time of get(key).
+    // adjacent cell whose hash is earlier or equal to the hash of the cell being emptied.
+    // This is a better alternative to using the lazy deletion strategy which utilizes
+    // the AVAILABLE object adds to the load factor and can increase the time of get(key).
     @Override
     public String remove(int key) {
         int index = hash(key);
@@ -100,22 +109,35 @@ public class HashTable implements IHashTable {
             return null;
         }
         else{
-            do {
+            // Linear probing algorithm
+            while (c != null){
                 c = internalArray[index];
-                if (c.getKey() == key) {
+                if (c == null){
+                    continue;
+                }
+                else if (c.getKey() == key) {
                     value = c.getValue();
                     cellToBeEmptied = index;
                 }
-                else {
-                    index = (index + 1) % N;
+                else if (cellToBeEmptied != -1 && hash(c.getKey()) <= cellToBeEmptied){
+                    break;
                 }
-            } while (c != null);
+                index = (index + 1) % N;
+            } ;
         }
 
         if (cellToBeEmptied != -1) {
-            int lastAdjacentCell = index -1; // -1 since index at this point is null
-            internalArray[cellToBeEmptied] = internalArray[lastAdjacentCell];
-            internalArray[lastAdjacentCell] = null;
+            if (internalArray[index] == null){
+                int lastAdjacentCell = index == 0 ? prime - 1 : index - 1; // -1 since array[index] is null
+                internalArray[cellToBeEmptied] = internalArray[lastAdjacentCell];
+                internalArray[lastAdjacentCell] = null;
+            }
+            else{
+                int lastAdjacentCell = index;
+                internalArray[cellToBeEmptied] = internalArray[lastAdjacentCell];
+                internalArray[lastAdjacentCell] = null;
+            }
+
             return value;
         }
         else {
@@ -123,43 +145,29 @@ public class HashTable implements IHashTable {
         }
     }
 
-    // Since the keys are already integers, a simple MAD compressions is used to hash the key
+    // Since the keys are already integers, a simple compressions is used to hash the key
     @Override
     public int hash(int key) {
-        // Making a & b less than 'prime' it ensures that a % N is never 0
-        // which is essential for MAD compression
-        int a = prime -1;
-        int b = prime -2;
 
-        return (a*key + b) % prime;
-    }
-
-    private class KeyIterator implements Iterator{
-        private int i = 0;
-
-        @Override
-        public boolean hasNext() {
-            return i < size;
-        }
-
-        @Override
-        public Object next() {
-            if (i == size) throw new NoSuchElementException("No next element");
-            return internalArray[i++].getKey();
-        }
-    }
-
-    private class KeyIterable implements Iterable{
-        @Override
-        public Iterator iterator() {
-            return new KeyIterator();
-        }
+        return key % prime;
     }
 
     @Override
-    public KeyIterable keySet() {
-        return new KeyIterable();
+    public int[] keySet() {
+        var allKeys = new int[prime];
+
+        int i = 0;
+        for (Entry e : internalArray ) {
+            if (e != null){
+                allKeys[i] = e.getKey();
+                i++;
+            }
+
+        }
+
+        return Arrays.copyOf(allKeys, i);
     }
+
 }
 
 
