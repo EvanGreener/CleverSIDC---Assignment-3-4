@@ -11,5 +11,7 @@ public interface ISequence<T> {
     Position<T> atIndex(int index);
     int size();
     boolean isEmpty();
+    Position<T> first();
+    Position<T> last();
 
 }

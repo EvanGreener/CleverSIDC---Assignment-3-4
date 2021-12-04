@@ -104,4 +104,14 @@ public class Sequence<T> implements ISequence<T>{
     public boolean isEmpty() {
         return size==0;
     }
+
+    @Override
+    public Position<T> first() {
+        return this.head.getNextPosition();
+    }
+
+    @Override
+    public Position<T> last() {
+        return this.head.getPreviousPosition();
+    }
 }

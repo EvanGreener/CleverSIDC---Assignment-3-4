@@ -1,5 +1,10 @@
 package utils;
 
+import adts.Position;
+import adts.Sequence;
+
+import java.net.Inet4Address;
+
 public class Utilities {
     // Finds the prime number closest to n between m and n using the well known
     // sieve of Eratosthenes algorithm
@@ -28,8 +33,27 @@ public class Utilities {
         return -1; // This is impossible but the compiler is not aware of that.
     }
 
-    public static int[] bucketSort(int[] array){
-        //TODO
-        return new int[2];
+    public static Sequence<Integer> bucketSort(int[] array){
+        // TODO
+        // Sequence representation of array
+        int N = array.length;
+        Sequence<Integer> s = new Sequence<Integer>();
+        for (int i : array) {
+            s.addLast(i);
+        }
+
+        Sequence<Integer>[] b = (Sequence<Integer>[]) new Object[N];
+        while (!s.isEmpty()){
+            int key = s.remove(0);
+            b[key].addLast(key);
+        }
+        for (int i = 0; i< N; i++){
+            while (!b[i].isEmpty()){
+                int key = b[i].remove(0);
+                s.addLast(key);
+            }
+        }
+
+        return s;
     }
 }

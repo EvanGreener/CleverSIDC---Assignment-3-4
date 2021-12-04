@@ -58,7 +58,7 @@ public class CleverSIDC {
         int indexKey1 = -1;
         int indexKey2 = -1;
 
-        Position<Integer> p = allKeys.getHead();
+        Position<Integer> p = allKeys.getHead().getNextPosition();
         for(int i = 0; i < allKeys.size(); i++) {
             int currentKey = p.getElement();
             if (currentKey == key1){
