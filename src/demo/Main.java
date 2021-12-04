@@ -38,10 +38,5 @@ public class Main {
         System.out.println(key0);
         System.out.println(key1);
         System.out.println(key2);
-
-
-
     }
-
-
 }
