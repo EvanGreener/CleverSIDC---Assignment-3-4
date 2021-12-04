@@ -21,7 +21,7 @@ public class Sequence<T> implements ISequence<T>{
             throw new IndexOutOfBoundsException();
         }
         Position<T> currentPosition = head;
-        for (int i = 1; i <= index ; i++) {
+        for (int i = 0; i <= index ; i++) {
             currentPosition = currentPosition.getNextPosition();
         }
         return currentPosition.getElement();
@@ -34,7 +34,7 @@ public class Sequence<T> implements ISequence<T>{
             throw new IndexOutOfBoundsException();
         }
         Position<T> currentPosition = head;
-        for (int i = 1; i <= index ; i++) {
+        for (int i = 0; i <= index ; i++) {
             currentPosition = currentPosition.getNextPosition();
         }
         currentPosition.setElement(object);
@@ -73,6 +73,18 @@ public class Sequence<T> implements ISequence<T>{
     @Override
     public T previous(Position<T> position) {
         return position.getPreviousPosition().getElement();
+    }
+
+    @Override
+    public Position<T> atIndex(int index) {
+        if (index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+        Position<T> currentPosition = head;
+        for (int i = 0; i <= index ; i++) {
+            currentPosition = currentPosition.getNextPosition();
+        }
+        return currentPosition;
     }
 
     @Override

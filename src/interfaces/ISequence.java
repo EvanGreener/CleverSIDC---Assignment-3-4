@@ -8,6 +8,7 @@ public interface ISequence<T> {
     T remove(int index);
     T next(Position<T> position);
     T previous(Position<T> position);
+    Position<T> atIndex(int index);
     int size();
     boolean isEmpty();
 
