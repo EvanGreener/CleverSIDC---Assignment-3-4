@@ -7,6 +7,14 @@ public class Sequence<T> implements ISequence<T>{
     private Position<T> tail;
     private int size; //number of elements
 
+    public Position<T> getHead() {
+        return head;
+    }
+
+    public Position<T> getTail() {
+        return tail;
+    }
+
     public Sequence() {
         head = new Position<T>(null, null,null );
         tail = new Position<T>(null, null,null );

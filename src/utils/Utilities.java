@@ -1,6 +1,6 @@
 package utils;
 
-public class SieveOfEratosthenes {
+public class Utilities {
     // Finds the prime number closest to n between m and n using the well known
     // sieve of Eratosthenes algorithm
     public static int sieveOfEratosthenes(int n)
@@ -26,5 +26,10 @@ public class SieveOfEratosthenes {
             }
         }
         return -1; // This is impossible but the compiler is not aware of that.
+    }
+
+    public static int[] bucketSort(int[] array){
+        //TODO
+        return new int[2];
     }
 }

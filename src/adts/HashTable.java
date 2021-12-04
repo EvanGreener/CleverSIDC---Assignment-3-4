@@ -1,11 +1,9 @@
 package adts;
 
-import utils.SieveOfEratosthenes;
+import utils.Utilities;
 import interfaces.*;
 
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 public class HashTable implements IHashTable {
     Entry[] internalArray;
@@ -69,7 +67,7 @@ public class HashTable implements IHashTable {
     // Doubles the capacity of the array and rehashes all the keys
     private void rehashAllKeys() {
         int oldPrime = internalArray.length;
-        prime = SieveOfEratosthenes.sieveOfEratosthenes(prime *2);
+        prime = Utilities.sieveOfEratosthenes(prime *2);
 
         var newArray = new Entry[prime];
         for (Entry c : internalArray) {
@@ -145,11 +143,12 @@ public class HashTable implements IHashTable {
         }
     }
 
-    // Since the keys are already integers, a simple compressions is used to hash the key
+    // Since the keys are already integers, a simple MAD compression is used to hash the key
     @Override
     public int hash(int key) {
-
-        return key % prime;
+        int a = prime -1;
+        int b = prime -2;
+        return (a*key + b) % prime;
     }
 
     @Override
