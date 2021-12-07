@@ -16,7 +16,7 @@ public class CleverSIDC {
             this.sequence = new Sequence<Entry>();
 
         }
-        else if (threshold >= 10000 &&threshold <= 500000) {
+        else if (threshold >= 10000 &&threshold <= 500000 + 50) {
             this.table = new HashTable(threshold);
 		}
 		else {

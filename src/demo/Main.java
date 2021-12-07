@@ -50,12 +50,32 @@ public class Main {
         try
         {
             sc = new Scanner(new FileInputStream("NASTA_test_file1.txt"));
+            CleverSIDC cs=new CleverSIDC();
+            Sequence<Entry> entries = new Sequence<>();
+
+            // Get size of sequence to get threshold
+            int size=0;
             while(sc.hasNextLine()) {
-            	 
-    	        System.out.println(sc.nextLine());
-    	      }
-    	 
-           
+                String thisLine= sc.nextLine();
+                int ID=Integer.parseInt(thisLine);
+                entries.addLast(new Entry(ID, "No info yet"));
+                size++;
+            }
+            System.out.println(size);
+            // Set threshold to be +100 the actual size
+            cs.setSIDCThreshold(size + 50);
+            Position<Entry> p = entries.getHead().getNextPosition();
+            while (p.getElement() != null){
+                int keyP = p.getElement().getKey();
+                String valueP = p.getElement().getValue();
+                cs.add(keyP, valueP);
+            }
+            System.out.println("DATA ADDED");
+
+            /*
+                Demo of CleverSIDC methods below:
+            */
+
         }
         catch (FileNotFoundException f)
         {
@@ -63,32 +83,6 @@ public class Main {
              System.exit(0);
         }
         
-        CleverSIDC cs=new CleverSIDC();
-        Sequence<Entry> entries = new Sequence<>();
-
-        // Get size of sequence to get threshold
-        int size=0;
-        while(sc.hasNext())
-        {
-            String thisLine= sc.nextLine();
-            int ID=Integer.parseInt(thisLine);
-            size++;
-            entries.addLast(new Entry(ID, "No info yet"));
-        }
-
-        // Set threshold to be +100 the actual size
-        cs.setSIDCThreshold(size + 50);
-        Position<Entry> p = entries.getHead().getNextPosition();
-        while (p.getElement() != null){
-            int keyP = p.getElement().getKey();
-            String valueP = p.getElement().getValue();
-            cs.add(keyP, valueP);
-        }
-        System.out.println("DATA ADDED");
-
-        /*
-            Demo of CleverSIDC operations
-         */
 
 
     }
