@@ -89,7 +89,7 @@ public class Main {
         /*
             Demo of CleverSIDC operations
          */
-        
+
 
     }
 }

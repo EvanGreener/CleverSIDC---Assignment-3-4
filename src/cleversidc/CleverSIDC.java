@@ -71,7 +71,10 @@ public class CleverSIDC {
                    break;
                }
             }
-
+            Position<Entry> prev = p.getPreviousPosition();
+            Position<Entry> next = p.getNextPosition();
+            prev.setNextPosition(next);
+            next.setPreviousPosition(prev);
             this.allKeys = sortKeysSequence();
             return value;
         }
@@ -84,7 +87,21 @@ public class CleverSIDC {
     }
 
     public String getValues(int key){
-        return table.get(key);
+        if (threshold >= 100 && threshold <= 10000){
+            String values = null;
+            Position<Entry> p = this.sequence.getHead();
+            p = p.getNextPosition();
+            while(p.getElement() != null) {
+                if (p.getElement().getKey() == key){
+                    values = p.getElement().getValue();
+                    break;
+                }
+            }
+            return values;
+        }
+        else { //(threshold >= 10000 &&threshold <= 500000)
+            return table.get(key);
+        }
     }
 
     public int nextKey(int key){
