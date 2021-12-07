@@ -4,26 +4,44 @@ import adts.*;
 import utils.Utilities;
 
 public class CleverSIDC {
+    // 2 main data structures
     private HashTable table;
+    private Sequence<Entry> sequence;
     private Sequence<Integer> allKeys;
+    private int threshold;
 
-    public CleverSIDC(int size){
-        this.table = new HashTable(size);
-    }
 
-    public void SetSIDCThreshold(int size){
-        //TODO
-    }
+	public void setSIDCThreshold(int threshold) {
+		if (threshold >= 100 && threshold <= 10000){
+            this.sequence = new Sequence<Entry>();
 
-    private Sequence<Integer> sortKeys(){
-        int[] keysUnsorted = table.keySet();
-        int[] keysSorted = Utilities.bucketSort(keysUnsorted);
-
-        Sequence<Integer> keysSortedS = new Sequence<Integer>();
-        for (int key : keysSorted){
-            keysSortedS.addLast(key);
         }
-        return keysSortedS;
+        else if (threshold >= 10000 &&threshold <= 500000) {
+            this.table = new HashTable(threshold);
+		}
+		else {
+            System.out.println("Error: Threshold must be between 100 and 500,000.");
+            System.exit(0);
+        }
+        this.threshold = threshold;
+	}
+
+
+    private Sequence<Integer> sortKeysHashTable(){
+        int[] keysUnsorted = table.keySet();
+        return Utilities.bucketSort(keysUnsorted);
+
+    }
+
+    private Sequence<Integer> sortKeysSequence(){
+        Sequence<Integer> keysUnsorted = new Sequence<Integer>();
+        Position<Entry> p = this.sequence.getHead();
+        p = p.getNextPosition();
+        while(p.getElement() != null) {
+            keysUnsorted.addLast(p.getElement().getKey());
+        }
+
+        return Utilities.bucketSort(keysUnsorted);
     }
 
     public Sequence<Integer> allKeys() {
@@ -31,13 +49,38 @@ public class CleverSIDC {
     }
 
     public void add(int key, String value){
-        table.put(key,value);
-        this.allKeys = sortKeys();
+        if (threshold >= 100 && threshold <= 10000){
+            sequence.addLast(new Entry(key, value));
+            this.allKeys = sortKeysSequence();
+
+        }
+        else { //(threshold >= 10000 &&threshold <= 500000)
+            table.put(key,value);
+            this.allKeys = sortKeysHashTable();
+        }
+
     }
     public String remove(int key){
-        String value = table.remove(key);
-        this.allKeys = sortKeys();
-        return value;
+        if (threshold >= 100 && threshold <= 10000){
+            String value = null;
+            Position<Entry> p = this.sequence.getHead();
+            p = p.getNextPosition();
+            while(p.getElement() != null) {
+               if (p.getElement().getKey() == key){
+                   value = p.getElement().getValue();
+                   break;
+               }
+            }
+
+            this.allKeys = sortKeysSequence();
+            return value;
+        }
+        else { //(threshold >= 10000 &&threshold <= 500000)
+            String value = table.remove(key);
+            this.allKeys = sortKeysHashTable();
+            return value;
+        }
+
     }
 
     public String getValues(int key){
@@ -79,6 +122,6 @@ public class CleverSIDC {
         return 0;
     }
 
-
-
 }
+
+

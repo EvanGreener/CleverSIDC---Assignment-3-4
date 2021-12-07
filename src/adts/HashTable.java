@@ -65,7 +65,7 @@ public class HashTable implements IHashTable {
     }
 
     // Doubles the capacity of the array and rehashes all the keys
-    private void rehashAllKeys() {
+    public void rehashAllKeys() {
         int oldPrime = internalArray.length;
         prime = Utilities.sieveOfEratosthenes(prime *2);
 

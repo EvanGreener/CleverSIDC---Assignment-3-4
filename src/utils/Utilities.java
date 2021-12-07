@@ -56,4 +56,23 @@ public class Utilities {
 
         return s;
     }
+    public static Sequence<Integer> bucketSort(Sequence<Integer> s){
+        // TODO
+        // Sequence representation of array
+        int N = s.size();
+
+        Sequence<Integer>[] b = (Sequence<Integer>[]) new Object[N];
+        while (!s.isEmpty()){
+            int key = s.remove(0);
+            b[key].addLast(key);
+        }
+        for (int i = 0; i< N; i++){
+            while (!b[i].isEmpty()){
+                int key = b[i].remove(0);
+                s.addLast(key);
+            }
+        }
+
+        return s;
+    }
 }
