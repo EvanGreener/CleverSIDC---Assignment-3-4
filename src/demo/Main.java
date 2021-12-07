@@ -43,7 +43,9 @@ public class Main {
         System.out.println(key1);
         System.out.println(key2);
 
-        // CleverSIDC demo
+        /*
+            Create sample CleverSIDC object
+         */
         Scanner sc=new Scanner(System.in);
         try
         {
@@ -84,7 +86,10 @@ public class Main {
         }
         System.out.println("DATA ADDED");
 
-        // Do operations with cs Below:
+        /*
+            Demo of CleverSIDC operations
+         */
         
+
     }
 }
